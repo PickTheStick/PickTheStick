@@ -14,6 +14,7 @@
         <h1>Pick The Stick!</h1>
         <div id="leaderboard">
             <h2>Live Leaderboard</h2>
+            <p>*Fail = Failed to get the runner in, when he was on third with less than 2 outs:*</p>
             <table>
                 <thead>
                     <tr>
@@ -33,17 +34,42 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('navigateToForm').addEventListener('click', function() {
-                window.location.href = 'statForm.html';
-            });        
-            document.getElementById('navigateToFormTwo').addEventListener('click', function() {
-                var password = prompt("Please enter the password:", "");
-                if (password === "pp") {
-                    window.location.href = 'editForm.html';
+            const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
+            const masterPassword = 'pp'; // Change this to your desired password
+
+            function isAuthenticated() {
+                return localStorage.getItem('authenticated') === 'true';
+            }
+
+            function authenticateUser() {
+                const password = prompt("Please enter the master password:", "");
+                if (password === masterPassword) {
+                    localStorage.setItem('authenticated', 'true');
+                    return true;
                 } else {
                     alert("Incorrect password!");
+                    return false;
                 }
+            }
+
+            function ensureAuthentication(callback) {
+                if (isAuthenticated() || authenticateUser()) {
+                    callback();
+                }
+            }
+
+            document.getElementById('navigateToForm').addEventListener('click', function() {
+                window.location.href = 'statForm.html';
             });
+
+            navigateToFormTwoButton.addEventListener('click', function() {
+                ensureAuthentication(() => {
+                    window.location.href = 'editForm.html';
+                });
+            });
+
+            // Render the leaderboard and attach event listeners to buttons
+            renderLeaderboard(JSON.parse(localStorage.getItem('leaderboard')) || []);
         });
     </script>
 </body>
