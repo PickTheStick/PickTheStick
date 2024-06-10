@@ -140,9 +140,16 @@ function generateResultDescription(walks, single, double, triple, homeRun, sacri
     if (rbis > 0) results.push(`${rbis} RBI's`);
     if (stolenBases > 0) results.push(`${stolenBases} SB`);
 
+    const negativeResults = [];
+    if (outs > 0) negativeResults.push(`${outs} out${outs > 1 ? 's' : ''}`);
+    if (doublePlay > 0) negativeResults.push(`${doublePlay} GIDP`);
+    if (leftOnBase > 0) negativeResults.push(`${leftOnBase} LOB`);
+    if (failedToGetRunner > 0) negativeResults.push(`${failedToGetRunner} Fail`);
+
     const negativePoints = (outs * 0.1) + (doublePlay * 0.25) + (leftOnBase * 0.15) + (failedToGetRunner * 0.25);
-    return `"${hits}/${atBats} (${results.join(', ')}) [points subtracted = ${negativePoints.toFixed(2)}]"`;
+    return `${hits}/${atBats} (${results.join(', ')}) [ -${negativePoints.toFixed(2)} (${negativeResults.join(', ')})]`;
 }
+
 
 function displayNetPoints(sectionId, points, color) {
     const section = document.querySelector(`.${sectionId}`);
@@ -175,16 +182,29 @@ function renderLeaderboard(leaderboard) {
 
     leaderboard.forEach((entry, index) => {
         const row = document.createElement('tr');
+        const points = entry.points.toFixed(2);
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${entry.name}</td>
-            <td>${entry.points.toFixed(2)}</td>
+            <td class="points-cell">${points}</td>
             <td>${entry.gameDate}</td>
             <td>
                 <button class="editButton">Edit</button>
                 <button class="deleteButton">Delete</button>
             </td>
         `;
+
+        // Set background color based on points
+        const pointsCell = row.querySelector('.points-cell');
+        if (entry.points >= 2.0) {
+            pointsCell.style.backgroundColor = 'darkgreen';
+        } else if (entry.points >= 0.01) {
+            pointsCell.style.backgroundColor = 'lightgreen';
+        } else if (entry.points >= -0.50 && entry.points <= 0.00) {
+            pointsCell.style.backgroundColor = 'lightcoral';
+        } else {
+            pointsCell.style.backgroundColor = 'darkred';
+        }
 
         const detailsRow = document.createElement('tr');
         detailsRow.classList.add('details-row');
@@ -205,7 +225,7 @@ function renderLeaderboard(leaderboard) {
 
         editButton.addEventListener('click', function(event) {
             event.stopPropagation();
-            const password = prompt("Please enter the password:", "");
+            const password = prompt("Please enter the edit password:", "");
             if (password === "pp") {
                 const entry = JSON.parse(localStorage.getItem('leaderboard'))[index];
                 // Navigate to the edit page with autofilled answers
@@ -217,7 +237,7 @@ function renderLeaderboard(leaderboard) {
 
         deleteButton.addEventListener('click', function(event) {
             event.stopPropagation();
-            const password = prompt("Please enter the password:", "");
+            const password = prompt("Please enter the delete password:", "");
             if (password === "pp") {
                 let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
                 leaderboard.splice(index, 1);
@@ -225,7 +245,8 @@ function renderLeaderboard(leaderboard) {
                 renderLeaderboard(leaderboard);
             } else {
                 alert("Incorrect password!");
-            }        });
+            }        
+        });
 
         tbody.appendChild(row);
         tbody.appendChild(detailsRow);
