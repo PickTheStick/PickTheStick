@@ -51,7 +51,7 @@ input[type="number"]:focus {
 
 button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #a91212;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -60,13 +60,45 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #420303;
 }
+
+.editButton {
+    background-color: green;
+    color: white;
+}
+
 
 #result {
     text-align: center;
     font-size: 18px;
     margin-bottom: 20px;
+}
+
+#leaderboard {
+    margin-bottom: 20px;
+}
+
+#leaderboard h2 {
+    text-align: center;
+    color: #007bff;
+}
+
+#leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboard th,
+#leaderboard td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+#leaderboard th {
+    background-color: #007bff;
+    color: #fff;
 }
 
 .positive-points h2,
