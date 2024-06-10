@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - statForm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <button id="navigateToLeaderboard">Today's Leaderboard</button>
+        <h1>Pick The Stick!</h1>
+        <form id="statForm">
+            <label for="playerName">Player Name:</label>
+            <input type="text" id="playerName" required><br><br>
+            
+            <label for="gameDate">Game Date:</label>
+            <input type="date" id="gameDate" required><br><br>
+
+            <div class="positive-points">
+                <h2>All Positive Points</h2>
+                <div class="stat-row">
+                    <label for="walks">Walks/Hit By Pitch:</label>
+                    <input type="number" id="walks" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="single">Single:</label>
+                    <input type="number" id="single" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="double">Double:</label>
+                    <input type="number" id="double" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="triple">Triple:</label>
+                    <input type="number" id="triple" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="homeRun">Home-Run:</label>
+                    <input type="number" id="homeRun" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="sacrifice">Sacrifice:</label>
+                    <input type="number" id="sacrifice" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="rbis">RBI's:</label>
+                    <input type="number" id="rbis" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="stolenBases">Stolen Bases:</label>
+                    <input type="number" id="stolenBases" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="negative-points">
+                <h2>All Negative Points</h2>
+                <div class="stat-row">
+                    <label for="outs">Outs:</label>
+                    <input type="number" id="outs" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="doublePlay">Grounded Into Double Plays:</label>
+                    <input type="number" id="doublePlay" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="leftOnBase">Runners Left On Base:</label>
+                    <input type="number" id="leftOnBase" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="failedToGetRunner">Failed to get the runner in, when he was on third with less than 2 outs:</label>
+                    <input type="number" id="failedToGetRunner" min="0" value="0">
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button type="submit" id="calculateButton">Calculate Points</button>
+                <button type="button" id="resetButton" style="display: none;">Reset</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
