@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-populate the date field with the current date
     const currentDate = new Date().toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
     const gameDateInput = document.getElementById('gameDate');
     if (gameDateInput) {
@@ -32,25 +31,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const failedToGetRunner = parseInt(document.getElementById('failedToGetRunner').value) || 0;
 
             const totalPoints = calculatePoints(walks, single, double, triple, homeRun, sacrifice, rbis, stolenBases, outs, doublePlay, leftOnBase, failedToGetRunner);
+            const resultDescription = generateResultDescription(walks, single, double, triple, homeRun, sacrifice, rbis, stolenBases, outs, doublePlay, leftOnBase, failedToGetRunner);
 
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `<p>${playerName} earned ${totalPoints.toFixed(2)} points on ${gameDate}.</p>`;
+            resultDiv.innerHTML = `<p>${playerName} earned ${totalPoints.toFixed(2)} points on ${gameDate}. ${resultDescription}</p>`;
 
             calculateButton.style.display = 'none';
             resetButton.style.display = 'inline-block';
             submitButton.style.display = 'inline-block';
         });
+
         document.getElementById('homeRun').addEventListener('input', function() {
             const homeRunValue = parseInt(this.value) || 0;
             const rbisInput = document.getElementById('rbis');
             const rbisValue = parseInt(rbisInput.value) || 0;
-        
+
             if (homeRunValue > 0 && rbisValue === 0) {
                 rbisInput.value = homeRunValue;
             }
         });
     }
-    
 
     if (resetButton) {
         resetButton.addEventListener('click', function() {
@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
             calculateButton.style.display = 'inline-block';
             resetButton.style.display = 'none';
             submitButton.style.display = 'none';
-            
         });
     }
 
@@ -72,7 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = document.getElementById('playerName').value;
             const gameDate = document.getElementById('gameDate').value; // Get the game date
             const totalPoints = parseFloat(document.getElementById('result').innerText.split('earned ')[1].split(' points')[0]);
-            const leaderboardEntry = { name: playerName, points: totalPoints, gameDate: gameDate };
+            const resultDescription = document.getElementById('result').innerText.split('. ')[1];
+            const leaderboardEntry = { name: playerName, points: totalPoints, gameDate: gameDate, resultDescription: resultDescription };
 
             let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
             leaderboard.push(leaderboardEntry);
@@ -126,6 +126,24 @@ function calculatePoints(walks, single, double, triple, homeRun, sacrifice, rbis
     return totalPoints;
 }
 
+function generateResultDescription(walks, single, double, triple, homeRun, sacrifice, rbis, stolenBases, outs, doublePlay, leftOnBase, failedToGetRunner) {
+    const hits = single + double + triple + homeRun;
+    const atBats = hits + outs;
+    const results = [];
+
+    if (walks > 0) results.push(`${walks} BB/HBP`);
+    if (single > 0) results.push(`${single} single${single > 1 ? 's' : ''}`);
+    if (double > 0) results.push(`${double} double${double > 1 ? 's' : ''}`);
+    if (triple > 0) results.push(`${triple} triple${triple > 1 ? 's' : ''}`);
+    if (homeRun > 0) results.push(`${homeRun} HR`);
+    if (sacrifice > 0) results.push(`${sacrifice} SAC`);
+    if (rbis > 0) results.push(`${rbis} RBI's`);
+    if (stolenBases > 0) results.push(`${stolenBases} SB`);
+
+    const negativePoints = (outs * 0.1) + (doublePlay * 0.25) + (leftOnBase * 0.15) + (failedToGetRunner * 0.25);
+    return `"${hits}/${atBats} (${results.join(', ')}) [points subtracted = ${negativePoints.toFixed(2)}]"`;
+}
+
 function displayNetPoints(sectionId, points, color) {
     const section = document.querySelector(`.${sectionId}`);
     const title = section.querySelector('h2');
@@ -135,43 +153,26 @@ function displayNetPoints(sectionId, points, color) {
 function displaySubPoints(sectionId, statId, value, color) {
     const section = document.querySelector(`.${sectionId}`);
     const subtitle = section.querySelector(`label[for="${statId}"]`);
-    subtitle.innerHTML += `<span style="color: ${color};"> (${value >= 0 ? '+' : ''}${value.toFixed(2)})</span>`;
+    subtitle.innerHTML += `<span style="color: ${color};"> (${value.toFixed(2)})</span>`;
 }
 
 function clearDisplayedPoints(sectionId) {
     const section = document.querySelector(`.${sectionId}`);
-    const titles = section.querySelectorAll('h2 span');
-    titles.forEach(span => span.remove());
+    const title = section.querySelector('h2');
+    title.innerHTML = title.innerHTML.split(' ')[0];
 
-    const subtitles = section.querySelectorAll('label span');
-    subtitles.forEach(span => span.remove());
+    const labels = section.querySelectorAll('label');
+    labels.forEach(label => {
+        label.innerHTML = label.innerHTML.split(' ')[0];
+    });
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const playerNameInput = document.getElementById('playerName');
-    const gameDateInput = document.getElementById('gameDate');
-    const pointsInput = document.getElementById('points');
-
-    if (playerNameInput && urlParams.has('playerName')) {
-        playerNameInput.value = urlParams.get('playerName');
-    }
-    if (gameDateInput && urlParams.has('gameDate')) {
-        gameDateInput.value = urlParams.get('gameDate');
-    }
-    if (pointsInput && urlParams.has('points')) {
-        pointsInput.value = urlParams.get('points');
-    }
-
-    if (document.getElementById('leaderboardBody')) {
-        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        renderLeaderboard(leaderboard);
-    }
-});
 
 function renderLeaderboard(leaderboard) {
-    leaderboard.sort((a, b) => b.points - a.points); // Sort the leaderboard based on points in descending order
-    const leaderboardBody = document.getElementById('leaderboardBody');
-    leaderboardBody.innerHTML = '';
+    const tbody = document.getElementById('leaderboardBody');
+    tbody.innerHTML = '';
+
+    leaderboard.sort((a, b) => b.points - a.points);
+
     leaderboard.forEach((entry, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -180,32 +181,53 @@ function renderLeaderboard(leaderboard) {
             <td>${entry.points.toFixed(2)}</td>
             <td>${entry.gameDate}</td>
             <td>
-                <button class="editButton" onclick="editEntry(${index})">Edit</button>
-                <button onclick="deleteEntry(${index})">Delete</button>
+                <button class="editButton">Edit</button>
+                <button class="deleteButton">Delete</button>
             </td>
         `;
-        leaderboardBody.appendChild(row);
-    });
-}
 
-function editEntry(index) {
-    const password = prompt("Please enter the password:", "");
-    if (password === "pp") {
-        const entry = JSON.parse(localStorage.getItem('leaderboard'))[index];
-        // Navigate to the edit page with autofilled answers
-        window.location.href = `editForm.html?playerName=${entry.name}&gameDate=${entry.gameDate}&points=${entry.points}`;
-    } else {
-        alert("Incorrect password!");
-    }
-}
-function deleteEntry(index) {
-    const password = prompt("Please enter the password:", "");
-    if (password === "pp") {
-        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        leaderboard.splice(index, 1);
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        renderLeaderboard(leaderboard);
-    } else {
-        alert("Incorrect password!");
-    }
+        const detailsRow = document.createElement('tr');
+        detailsRow.classList.add('details-row');
+        detailsRow.innerHTML = `
+            <td colspan="5">${entry.resultDescription}</td>
+        `;
+
+        row.addEventListener('click', function() {
+            if (detailsRow.style.display === 'none' || !detailsRow.style.display) {
+                detailsRow.style.display = 'table-row';
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        });
+
+        const editButton = row.querySelector('.editButton');
+        const deleteButton = row.querySelector('.deleteButton');
+
+        editButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const password = prompt("Please enter the password:", "");
+            if (password === "pp") {
+                const entry = JSON.parse(localStorage.getItem('leaderboard'))[index];
+                // Navigate to the edit page with autofilled answers
+                window.location.href = `editForm.html?playerName=${entry.name}&gameDate=${entry.gameDate}&points=${entry.points}`;
+            } else {
+                alert("Incorrect password!");
+            }
+        });
+
+        deleteButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const password = prompt("Please enter the password:", "");
+            if (password === "pp") {
+                let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+                leaderboard.splice(index, 1);
+                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+                renderLeaderboard(leaderboard);
+            } else {
+                alert("Incorrect password!");
+            }        });
+
+        tbody.appendChild(row);
+        tbody.appendChild(detailsRow);
+    });
 }
