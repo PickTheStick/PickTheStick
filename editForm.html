@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - editForm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <button id="navigateToLeaderboard">Today's Leaderboard</button>
+        <h1>Edit The Stick!</h1>
+        <form id="statForm">
+            <label for="playerName">Player Name:</label>
+            <input type="text" id="playerName" required><br><br>
+            
+            <label for="gameDate">Game Date:</label>
+            <input type="date" id="gameDate" required><br><br>
+
+            <div class="positive-points">
+                <h2>All Positive Points</h2>
+                <div class="stat-row">
+                    <label for="walks">Walks/Hit By Pitch:</label>
+                    <input type="number" id="walks" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="single">Single:</label>
+                    <input type="number" id="single" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="double">Double:</label>
+                    <input type="number" id="double" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="triple">Triple:</label>
+                    <input type="number" id="triple" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="homeRun">Home-Run:</label>
+                    <input type="number" id="homeRun" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="SB">Stolen Base:</label>
+                    <input type="number" id="SB" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="sacrifice">Sacrifice:</label>
+                    <input type="number" id="sacrifice" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="rbis">RBI's:</label>
+                    <input type="number" id="rbis" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="runs">Runs:</label>
+                    <input type="number" id="runs" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="neutral-points">
+                <h2>Neutral Points</h2>
+                <div class="stat-row">
+                    <label for="outs">Outs:</label>
+                    <input type="number" id="outs" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="roe">Reached On Error:</label>
+                    <input type="number" id="roe" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="negative-points">
+                <h2>All Negative Points</h2>
+                <div class="stat-row">
+                    <label for="strikeouts">Strike Outs:</label>
+                    <input type="number" id="strikeouts" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="caughtStealing">Caught Stealing:</label>
+                    <input type="number" id="caughtStealing" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="doublePlay">Grounded Into Double Plays:</label>
+                    <input type="number" id="doublePlay" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="rispLob">Runner In Scoring Position Left On Base:</label>
+                    <input type="number" id="rispLob" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="failedToGetRunner">Failed to get the runner in, when he was on third with less than 2 outs:</label>
+                    <input type="number" id="failedToGetRunner" min="0" value="0">
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button type="submit" id="calculateButton">Calculate Points</button>
+                <button type="button" id="resetButton" style="display: none;">Reset</button>
+                <button type="button" id="submitButton" style="display: none; background-color: green;">Submit</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerName = urlParams.get('playerName');
+            const gameDate = urlParams.get('gameDate');
+            const pointsString = urlParams.get('points');
+    
+            console.log('Points String:', pointsString);
+    
+            try {
+                const points = JSON.parse(pointsString);
+                console.log('Points:', points);
+    
+                // Set player name and game date
+                document.getElementById('playerName').value = playerName;
+                document.getElementById('gameDate').value = gameDate;
+    
+                // Set positive points
+                const positivePoints = points.positivePoints;
+                console.log('Positive Points:', positivePoints);
+                for (const key in positivePoints) {
+                    if (positivePoints.hasOwnProperty(key)) {
+                        console.log('Setting', key, 'to', positivePoints[key]);
+                        document.getElementById(key).value = positivePoints[key];
+                    }
+                }
+    
+                // Set neutral points
+                const neutralPoints = points.neutralPoints;
+                console.log('Neutral Points:', neutralPoints);
+                for (const key in neutralPoints) {
+                    if (neutralPoints.hasOwnProperty(key)) {
+                        console.log('Setting', key, 'to', neutralPoints[key]);
+                        document.getElementById(key).value = neutralPoints[key];
+                    }
+                }
+    
+                // Set negative points
+                const negativePoints = points.negativePoints;
+                console.log('Negative Points:', negativePoints);
+                for (const key in negativePoints) {
+                    if (negativePoints.hasOwnProperty(key)) {
+                        console.log('Setting', key, 'to', negativePoints[key]);
+                        document.getElementById(key).value = negativePoints[key];
+                    }
+                }
+            } catch (error) {
+                console.error('Error parsing points:', error);
+            }
+    
+            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+            
+        });
+    </script>
+    
+    
+    
+</body>
+</html>

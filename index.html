@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="navigateToFormTwo">Add to LB (Dev tool)</button>
+
+    <div class="container">
+        <button id="navigateToForm">Fantasy PickTheStick Calculator</button>
+        <h1>Pick The Stick!</h1>
+        <div id="leaderboard">
+            <h2>Live Leaderboard</h2>
+            <p>*Fail = Failed to get the runner in, when he was on third with less than 2 outs:*</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player Name</th>
+                        <th>Points</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Leaderboard rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
+            const masterPassword = 'pp'; // Change this to your desired password
+
+            function isAuthenticated() {
+                return localStorage.getItem('authenticated') === 'true';
+            }
+
+            function authenticateUser() {
+                const password = prompt("Please enter the master password:", "");
+                if (password === masterPassword) {
+                    localStorage.setItem('authenticated', 'true');
+                    return true;
+                } else {
+                    alert("Incorrect password!");
+                    return false;
+                }
+            }
+
+            function ensureAuthentication(callback) {
+                if (isAuthenticated() || authenticateUser()) {
+                    callback();
+                }
+            }
+
+            document.getElementById('navigateToForm').addEventListener('click', function() {
+                window.location.href = 'editForm.html';
+            });
+
+            navigateToFormTwoButton.addEventListener('click', function() {
+                ensureAuthentication(() => {
+                    window.location.href = 'addForm.html';
+                });
+            });
+
+            // Render the leaderboard and attach event listeners to buttons
+            renderLeaderboard(JSON.parse(localStorage.getItem('leaderboard')) || []);
+        });
+    </script>
+</body>
+</html>
