@@ -1,8 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
-    const gameDateInput = document.getElementById('gameDate');
-    if (gameDateInput) {
-        gameDateInput.value = currentDate;
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerName = urlParams.get('playerName');
+    const gameDate = urlParams.get('gameDate');
+    const pointsString = urlParams.get('points');
+    
+    console.log('Points String:', pointsString);
+
+    try {
+        if (pointsString !== null) {
+            // Ensure pointsString is parsed as JSON
+            const points = JSON.parse(pointsString);
+            console.log('Points:', points);
+    
+            // Set player name and game date
+            document.getElementById('playerName').value = playerName;
+            document.getElementById('gameDate').value = gameDate;
+    
+            // Set positive points
+            const positivePoints = points.positivePoints;
+            console.log('Positive Points:', positivePoints);
+            for (const key in positivePoints) {
+                if (positivePoints.hasOwnProperty(key)) {
+                    console.log('Setting', key, 'to', positivePoints[key]);
+                    document.getElementById(key).value = positivePoints[key];
+                }
+            }
+    
+            // Set neutral points
+            const neutralPoints = points.neutralPoints;
+            console.log('Neutral Points:', neutralPoints);
+            for (const key in neutralPoints) {
+                if (neutralPoints.hasOwnProperty(key)) {
+                    console.log('Setting', key, 'to', neutralPoints[key]);
+                    document.getElementById(key).value = neutralPoints[key];
+                }
+            }
+    
+            // Set negative points
+            const negativePoints = points.negativePoints;
+            console.log('Negative Points:', negativePoints);
+            for (const key in negativePoints) {
+                if (negativePoints.hasOwnProperty(key)) {
+                    console.log('Setting', key, 'to', negativePoints[key]);
+                    document.getElementById(key).value = negativePoints[key];
+                }
+            }
+        } else {
+            console.log('Points String is null');
+        }
+    } catch (error) {
+        console.error('Error parsing points:', error);
     }
 
     const statForm = document.getElementById('statForm');
@@ -47,13 +94,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const homeRunValue = parseInt(this.value) || 0;
             const rbisInput = document.getElementById('rbis');
             const rbisValue = parseInt(rbisInput.value) || 0;
+            const runsInput = document.getElementById('runs');
+            const runsValue = parseInt(rbisInput.value) || 0;
 
             if (homeRunValue > 0 && rbisValue === 0) {
                 rbisInput.value = homeRunValue;
             }
+            if (homeRunValue > 0 && runsValue === 0) {
+                runsInput.value = homeRunValue;
+            }
         });
 // Add event listeners for Strike Outs, Grounded Into Double Plays, Runner In Scoring Position Left On Base, and Failed to get the runner in
-['strikeouts', 'doublePlay', 'rispLob', 'failedToGetRunner'].forEach(function(statId) {
+['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
     const inputElement = document.getElementById(statId);
     if (inputElement) {
         inputElement.addEventListener('input', function() {
