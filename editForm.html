@@ -105,61 +105,12 @@
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    
-            const urlParams = new URLSearchParams(window.location.search);
-            const playerName = urlParams.get('playerName');
-            const gameDate = urlParams.get('gameDate');
-            const pointsString = urlParams.get('points');
-    
-            console.log('Points String:', pointsString);
-    
-            try {
-                const points = JSON.parse(pointsString);
-                console.log('Points:', points);
-    
-                // Set player name and game date
-                document.getElementById('playerName').value = playerName;
-                document.getElementById('gameDate').value = gameDate;
-    
-                // Set positive points
-                const positivePoints = points.positivePoints;
-                console.log('Positive Points:', positivePoints);
-                for (const key in positivePoints) {
-                    if (positivePoints.hasOwnProperty(key)) {
-                        console.log('Setting', key, 'to', positivePoints[key]);
-                        document.getElementById(key).value = positivePoints[key];
-                    }
-                }
-    
-                // Set neutral points
-                const neutralPoints = points.neutralPoints;
-                console.log('Neutral Points:', neutralPoints);
-                for (const key in neutralPoints) {
-                    if (neutralPoints.hasOwnProperty(key)) {
-                        console.log('Setting', key, 'to', neutralPoints[key]);
-                        document.getElementById(key).value = neutralPoints[key];
-                    }
-                }
-    
-                // Set negative points
-                const negativePoints = points.negativePoints;
-                console.log('Negative Points:', negativePoints);
-                for (const key in negativePoints) {
-                    if (negativePoints.hasOwnProperty(key)) {
-                        console.log('Setting', key, 'to', negativePoints[key]);
-                        document.getElementById(key).value = negativePoints[key];
-                    }
-                }
-            } catch (error) {
-                console.error('Error parsing points:', error);
-            }
-    
-            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
-                window.location.href = 'index.html';
-            });
-            
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+        window.location.href = 'index.html';
+    });
+});
+
     </script>
     
     
