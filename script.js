@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('gameDate').value = gameDate;
     
             // Set positive points
-            const positivePoints = points.positivePoints;
+            const positivePoints = points.positivePoints || {};
             console.log('Positive Points:', positivePoints);
             for (const key in positivePoints) {
                 if (positivePoints.hasOwnProperty(key)) {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             // Set neutral points
-            const neutralPoints = points.neutralPoints;
+            const neutralPoints = points.neutralPoints || {};
             console.log('Neutral Points:', neutralPoints);
             for (const key in neutralPoints) {
                 if (neutralPoints.hasOwnProperty(key)) {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             // Set negative points
-            const negativePoints = points.negativePoints;
+            const negativePoints = points.negativePoints || {};
             console.log('Negative Points:', negativePoints);
             for (const key in negativePoints) {
                 if (negativePoints.hasOwnProperty(key)) {
@@ -317,24 +317,29 @@ function renderLeaderboard(leaderboard) {
 
         editButton.addEventListener('click', function(event) {
             event.stopPropagation();
-            const password = prompt("Please enter the edit password:", "");
-            if (password === "pp") {
-                const entry = leaderboard[index];
-                const playerName = encodeURIComponent(entry.name);
-                const gameDate = encodeURIComponent(entry.gameDate);
-                const points = encodeURIComponent(entry.points);
-                // Navigate to the edit page with entry details as URL parameters
-                window.location.href = `editForm.html?playerName=${playerName}&gameDate=${gameDate}&points=${points}`;
-            } else {
-                alert("Incorrect password!");
-            }
+            const entry = leaderboard[index];
+            const playerName = encodeURIComponent(entry.name);
+            const gameDate = encodeURIComponent(entry.gameDate);
+        
+            // Assuming entry.points contains the total points and not the breakdown
+            // You should pass the detailed points breakdown here as well
+            const detailedPoints = {
+                positivePoints: entry.positivePoints,
+                neutralPoints: entry.neutralPoints,
+                negativePoints: entry.negativePoints
+            };
+            const points = encodeURIComponent(JSON.stringify(detailedPoints));
+        
+            // Navigate to the edit page with entry details as URL parameters
+            window.location.href = `editForm.html?playerName=${playerName}&gameDate=${gameDate}&points=${points}`;
         });
+        
         
 
         deleteButton.addEventListener('click', function(event) {
             event.stopPropagation();
-            const password = prompt("Please enter the delete password:", "");
-            if (password === "pp") {
+            const confirmDelete = confirm("Are you sure you want to delete this?");
+            if (confirmDelete) {
                 let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
                 leaderboard.splice(index, 1);
                 localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
@@ -343,11 +348,11 @@ function renderLeaderboard(leaderboard) {
                 // If you have a details row, remove it as well
                 detailsRow.remove();
             } else {
-                alert("Incorrect password!");
-            }        
+                alert("Deletion canceled!");
+            }
         });
         
-
+        
         tbody.appendChild(row);
         tbody.appendChild(detailsRow);
     });
