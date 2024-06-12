@@ -11,7 +11,10 @@
         <button id="navigateToLeaderboard">Today's Leaderboard</button>
         <h1>Edit The Stick!</h1>
         <form id="statForm">
-            <label for="playerName">Player Name:</label>
+            <label for="userName">User:</label>
+            <input type="text" id="userName" required><br><br>
+
+            <label for="playerName">Baseball Player:</label>
             <input type="text" id="playerName" required><br><br>
             
             <label for="gameDate">Game Date:</label>
@@ -109,6 +112,13 @@
             document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
                 window.location.href = 'index.html';
             });
+            const urlParams = new URLSearchParams(window.location.search);
+            const userName = decodeURIComponent(urlParams.get('userName'));
+            const playerName = decodeURIComponent(urlParams.get('playerName'));
+            const gameDate = decodeURIComponent(urlParams.get('gameDate'));
+            document.getElementById('userName').value = userName;
+            document.getElementById('playerName').value = playerName;
+            document.getElementById('gameDate').value = gameDate;
         });
     </script>
 </body>
