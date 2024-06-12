@@ -1,22 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
+    const userName = document.getElementById('userName');
     const playerName = urlParams.get('playerName');
     const gameDate = urlParams.get('gameDate');
     const pointsString = urlParams.get('points');
-    
-    console.log('Points String:', pointsString);
 
+    console.log('Points String:', pointsString);
     try {
         if (pointsString !== null) {
-            // Ensure pointsString is parsed as JSON
             const points = JSON.parse(pointsString);
             console.log('Points:', points);
-    
-            // Set player name and game date
+
+            document.getElementById('userName').value = userName;
             document.getElementById('playerName').value = playerName;
             document.getElementById('gameDate').value = gameDate;
-    
-            // Set positive points
+
             const positivePoints = points.positivePoints || {};
             console.log('Positive Points:', positivePoints);
             for (const key in positivePoints) {
@@ -25,8 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById(key).value = positivePoints[key];
                 }
             }
-    
-            // Set neutral points
+
             const neutralPoints = points.neutralPoints || {};
             console.log('Neutral Points:', neutralPoints);
             for (const key in neutralPoints) {
@@ -35,8 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById(key).value = neutralPoints[key];
                 }
             }
-    
-            // Set negative points
+
             const negativePoints = points.negativePoints || {};
             console.log('Negative Points:', negativePoints);
             for (const key in negativePoints) {
@@ -51,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (error) {
         console.error('Error parsing points:', error);
     }
+});
+
 
     const statForm = document.getElementById('statForm');
     const resetButton = document.getElementById('resetButton');
@@ -60,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (statForm) {
         statForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            const userName = document.getElementById('userName').value;
             const playerName = document.getElementById('playerName').value;
             const gameDate = document.getElementById('gameDate').value;
 
@@ -79,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const doublePlay = parseInt(document.getElementById('doublePlay').value) || 0;
             const rispLob = parseInt(document.getElementById('rispLob').value) || 0;
             const failedToGetRunner = parseInt(document.getElementById('failedToGetRunner').value) || 0;
+            
             const totalPoints = calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner);
             const resultDescription = generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner);
 
@@ -104,27 +104,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 runsInput.value = homeRunValue;
             }
         });
-// Add event listeners for Strike Outs, Grounded Into Double Plays, Runner In Scoring Position Left On Base, and Failed to get the runner in
-['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
-    const inputElement = document.getElementById(statId);
-    if (inputElement) {
-        inputElement.addEventListener('input', function() {
-            const oldValue = parseInt(this.getAttribute('data-old-value')) || 0;
-            const increaseValue = parseInt(this.value) || 0;
-            const outsInput = document.getElementById('outs');
-            if (increaseValue > oldValue) {
-                outsInput.value = parseInt(outsInput.value) + 1;
-            } else if (increaseValue < oldValue) {
-                // Decrease the number of outs by one if the value is decreased
-                outsInput.value = Math.max(parseInt(outsInput.value) - 1, 0);
-            }
-            // Update the data-old-value attribute with the new value
-            this.setAttribute('data-old-value', increaseValue);
-        });
-    }
-});
-
-    }
+    // Add event listeners for Strike Outs, Grounded Into Double Plays, Runner In Scoring Position Left On Base, and Failed to get the runner in
+    ['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
+        const inputElement = document.getElementById(statId);
+        if (inputElement) {
+            inputElement.addEventListener('input', function() {
+                const oldValue = parseInt(this.getAttribute('data-old-value')) || 0;
+                const increaseValue = parseInt(this.value) || 0;
+                const outsInput = document.getElementById('outs');
+                if (increaseValue > oldValue) {
+                    outsInput.value = parseInt(outsInput.value) + 1;
+                } else if (increaseValue < oldValue) {
+                    // Decrease the number of outs by one if the value is decreased
+                    outsInput.value = Math.max(parseInt(outsInput.value) - 1, 0);
+                }
+                // Update the data-old-value attribute with the new value
+                this.setAttribute('data-old-value', increaseValue);
+            });
+        }
+    });
+}
 
     if (resetButton) {
         resetButton.addEventListener('click', function() {
@@ -144,10 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (submitButton) {
         submitButton.addEventListener('click', function() {
             const playerName = document.getElementById('playerName').value;
+            const userName = document.getElementById('userName').value;
             const gameDate = document.getElementById('gameDate').value;
             const totalPoints = parseFloat(document.getElementById('result').innerText.split('earned ')[1].split(' points')[0]);
             const resultDescription = document.getElementById('result').innerText.split('. ')[1];
-            const leaderboardEntry = { name: playerName, points: totalPoints, gameDate: gameDate, resultDescription: resultDescription };
+            const leaderboardEntry = { user: userName, name: playerName, points: totalPoints, gameDate: gameDate, resultDescription: resultDescription };
     
             let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
     
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
         renderLeaderboard(leaderboard);
     }
-});
+
 
 function calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner) {
     let positivePoints = 0;
@@ -238,10 +238,8 @@ function generateResultDescription(walks, single, double, triple, homeRun, SB, s
     if (outs > 0) neutralResults.push(`${outs} out${outs > 1 ? 's' : ''}`);
 
     const negativePoints = (strikeouts * 0.5) + (caughtStealing * 0.5) + (doublePlay * 1) + (rispLob * 0.5) + (failedToGetRunner * 1);
-    const neutralPoints = (roe * 0.0) + (outs * 0.0);
     return `${hits}/${atBats} (${results.join(', ')}) [ -${negativePoints.toFixed(2)} (${negativeResults.join(', ')})]`;
 }
-
 
 function displayNetPoints(sectionId, points, color) {
     const section = document.querySelector(`.${sectionId}`);
@@ -271,12 +269,12 @@ function renderLeaderboard(leaderboard) {
     tbody.innerHTML = '';
 
     leaderboard.sort((a, b) => b.points - a.points);
-
     leaderboard.forEach((entry, index) => {
         const row = document.createElement('tr');
         const points = entry.points.toFixed(2);
         row.innerHTML = `
             <td>${index + 1}</td>
+            <td>${entry.user}</td>
             <td>${entry.name}</td>
             <td class="points-cell">${points}</td>
             <td>${entry.gameDate}</td>
@@ -301,7 +299,7 @@ function renderLeaderboard(leaderboard) {
         const detailsRow = document.createElement('tr');
         detailsRow.classList.add('details-row');
         detailsRow.innerHTML = `
-            <td colspan="5">${entry.resultDescription}</td>
+            <td colspan="6">${entry.resultDescription}</td>
         `;
 
         row.addEventListener('click', function() {
@@ -318,6 +316,7 @@ function renderLeaderboard(leaderboard) {
         editButton.addEventListener('click', function(event) {
             event.stopPropagation();
             const entry = leaderboard[index];
+            const userName = encodeURIComponent(entry.user);
             const playerName = encodeURIComponent(entry.name);
             const gameDate = encodeURIComponent(entry.gameDate);
         
@@ -331,10 +330,8 @@ function renderLeaderboard(leaderboard) {
             const points = encodeURIComponent(JSON.stringify(detailedPoints));
         
             // Navigate to the edit page with entry details as URL parameters
-            window.location.href = `editForm.html?playerName=${playerName}&gameDate=${gameDate}&points=${points}`;
+            window.location.href = `editForm.html?playerName=${playerName}&userName=${userName}&gameDate=${gameDate}&points=${points}`;
         });
-        
-        
 
         deleteButton.addEventListener('click', function(event) {
             event.stopPropagation();
@@ -351,9 +348,8 @@ function renderLeaderboard(leaderboard) {
                 alert("Deletion canceled!");
             }
         });
-        
-        
         tbody.appendChild(row);
         tbody.appendChild(detailsRow);
     });
 }
+
