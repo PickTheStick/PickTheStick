@@ -1,8 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-        // Retrieve leaderboard data from localStorage
-        const leaderboardData = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        // Render the leaderboard
-        renderLeaderboard(leaderboardData);
     const urlParams = new URLSearchParams(window.location.search);
     const userName = document.getElementById('userName');
     const playerName = urlParams.get('playerName');
@@ -62,10 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (statForm) {
         statForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            const userName = document.getElementById('userName').value;
-            const playerName = document.getElementById('playerName').value;
-            const gameDate = document.getElementById('gameDate').value;
-
             const walks = parseInt(document.getElementById('walks').value) || 0;
             const single = parseInt(document.getElementById('single').value) || 0;
             const double = parseInt(document.getElementById('double').value) || 0;
@@ -87,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const resultDescription = generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner);
 
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `<p>${playerName} earned ${totalPoints.toFixed(2)} points on ${gameDate}. ${resultDescription}</p>`;
+            resultDiv.innerHTML = `<p>Earned ${totalPoints.toFixed(2)} points. ${resultDescription}</p>`;
 
             calculateButton.style.display = 'none';
             resetButton.style.display = 'inline-block';
@@ -146,12 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (submitButton) {
         submitButton.addEventListener('click', function() {
-            const playerName = document.getElementById('playerName').value;
-            const userName = document.getElementById('userName').value;
-            const gameDate = document.getElementById('gameDate').value;
             const totalPoints = parseFloat(document.getElementById('result').innerText.split('earned ')[1].split(' points')[0]);
             const resultDescription = document.getElementById('result').innerText.split('. ')[1];
-            const leaderboardEntry = { user: userName, name: playerName, points: totalPoints, gameDate: gameDate, resultDescription: resultDescription };
+            const leaderboardEntry = {  points: totalPoints, resultDescription: resultDescription };
     
             let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
     

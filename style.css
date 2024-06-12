@@ -68,7 +68,6 @@ button:hover {
     color: white;
 }
 
-
 #result {
     text-align: center;
     font-size: 18px;
@@ -129,7 +128,9 @@ span.sub-point {
 span.green {
     color: green;
 }
-
+span.grey{
+    color: grey;
+}
 span.red {
     color: red;
 }
