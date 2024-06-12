@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="navigateToFormTwo">Add to LeaderBoard</button>
-
     <div class="container">
-        <button id="navigateToForm">Fantasy PickTheStick Calculator</button>
+        <button id="navigateToFormTwo">Add to LeaderBoard</button>
+        <br><br>
+        <button id="navigateToFormThree">Fantasy PickTheStick Calculator</button>
         <h1>Pick The Stick!</h1>
         <div id="leaderboard">
             <h2>Live Leaderboard</h2>
@@ -35,37 +35,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
-            const masterPassword = 'pp'; // Change this to your desired password
-
-            function isAuthenticated() {
-                return localStorage.getItem('authenticated') === 'true';
-            }
-
-            function authenticateUser() {
-                const password = prompt("Please enter the master password:", "");
-                if (password === masterPassword) {
-                    localStorage.setItem('authenticated', 'true');
-                    return true;
-                } else {
-                    alert("Incorrect password!");
-                    return false;
-                }
-            }
-
-            function ensureAuthentication(callback) {
-                if (isAuthenticated() || authenticateUser()) {
-                    callback();
-                }
-            }
-
-            document.getElementById('navigateToForm').addEventListener('click', function() {
-                window.location.href = 'editForm.html';
+            
+            navigateToFormTwoButton.addEventListener('click', function() {
+                window.location.href = 'addForm.html';
             });
 
-            navigateToFormTwoButton.addEventListener('click', function() {
-                ensureAuthentication(() => {
-                    window.location.href = 'addForm.html';
-                });
+            document.getElementById('navigateToFormThree').addEventListener('click', function() {
+                window.location.href = 'calcForm.html';
             });
 
             // Render the leaderboard and attach event listeners to buttons
