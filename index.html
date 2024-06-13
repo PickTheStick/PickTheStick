@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - Leaderboard</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <button id="navigateToSearch">View A Previous Performance!</button>
+    <div class="container">
+        <button id="navigateToFormTwo">Add to LeaderBoard</button>
+        <br><br>
+        <button id="navigateToFormThree">Fantasy PickTheStick Calculator</button>
+        <h1>Pick The Stick!</h1>
+        <div id="leaderboard">
+            <h2>Live Leaderboard</h2>
+            <p>*Fail = Failed to get the runner in, when he was on third with less than 2 outs:*</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Player Name</th>
+                        <th>Points</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Leaderboard rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="sticky-note">
+        <p>DEV NOTES</p>
+        <ol>
+            <li>Make edit page re-populate all the number values. Then make the number values that do appear password locked.</li>
+            <li>Make leaderboard global --> this means PAYING for an online database to store information on the cloud so everyone can see what other people submitted.</li>
+            <li>View performance from any player on any date --> this entails finding an API that is has CORS permissions that can cross reference my data with data that they have. Also needs back-end node.js and npm installs. (this is hard)</li>
+            <li>Once step 2 & 3 are done: rebuild interface from the ground up to make the skeleton of what the app will end up looking like.</li>
+            <ol>
+                <li>Home page will have users sign-in to a 'pick the stick group'. There will be 5 groups. (groups of 9)</li>
+                <li>After a group is selected for that day, there will be a new page with the option to 'pick the stick'.</li>
+                <li>Once picked it will make the leaderboard page appear.</li>
+                <li>New leaderboard will have live leaderboard with the users 'pick the stick' among the other 8 members.</li>
+                <li>'Add to Leaderboard' and 'delete' button will be password locked.</li>
+                <li>'Edit' button will only allow the user to change their username.</li>
+                <li>After 12:00PM leaderboards will clear.</li>
+            </ol>
+        </ol>
+    </div>
+
+    <script src="./apps/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
+            const navigateToSearchButton = document.getElementById('navigateToSearch');
+            navigateToFormTwoButton.addEventListener('click', function() {
+                window.location.href = 'addForm.html';
+            });
+            navigateToSearchButton.addEventListener('click', function() {
+                window.location.href = 'search.html';
+            });
+
+            document.getElementById('navigateToFormThree').addEventListener('click', function() {
+                window.location.href = 'calcForm.html';
+            });
+
+            // Render the leaderboard and attach event listeners to buttons
+            renderLeaderboard(JSON.parse(localStorage.getItem('leaderboard')) || []);
+        });
+    </script>
+</body>
+</html>
+

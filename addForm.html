@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - addForm</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <div class="container">
+        <button id="navigateToLeaderboard">Today's Leaderboard</button>
+        <h1>Add To The Stick!</h1>
+        <form id="statForm">
+            <label for="userName">User:</label>
+            <input type="text" id="userName" required><br><br>
+
+            <label for="playerName">Baseball Player:</label>
+            <input type="text" id="playerName" required><br><br>
+            
+            <label for="gameDate">Game Date:</label>
+            <input type="date" id="gameDate" required><br><br>
+
+            <div class="positive-points">
+                <h2>All Positive Points</h2>
+                <div class="stat-row">
+                    <label for="walks">Walks/Hit By Pitch: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="walks" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="single">Single: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="single" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="double">Double: <span class="sub-point green">(2)</span></label>
+                    <input type="number" id="double" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="triple">Triple: <span class="sub-point green">(3)</span></label>
+                    <input type="number" id="triple" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="homeRun">Home-Run: <span class="sub-point green">(4)</span></label>
+                    <input type="number" id="homeRun" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="SB">Stolen Base: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="SB" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="sacrifice">Sacrifice: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="sacrifice" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="rbis">RBI's: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="rbis" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="runs">Runs: <span class="sub-point green">(1)</span></label>
+                    <input type="number" id="runs" min="0" value="0">
+                </div>
+            </div>
+            <div class="neutral-points">
+                <h2>Neutral Points</h2>
+                <div class="stat-row">
+                    <label for="outs">Outs: <span class="sub-point grey">(0)</span></label>
+                    <input type="number" id="outs" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="roe">Reached On Error: <span class="sub-point grey">(0)</span></label>
+                    <input type="number" id="roe" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="negative-points">
+                <h2>All Negative Points</h2>
+                <div class="stat-row">
+                    <label for="strikeouts">Strike Outs: <span class="sub-point red">(1)</span></label>
+                    <input type="number" id="strikeouts" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="caughtStealing">Caught Stealing: <span class="sub-point red">(1)</span></label>
+                    <input type="number" id="caughtStealing" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="doublePlay">Grounded Into Double Plays: <span class="sub-point red">(1)</span></label>
+                    <input type="number" id="doublePlay" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="rispLob">Runner In Scoring Position Left On Base: <span class="sub-point red">(0.5)</span></label>
+                    <input type="number" id="rispLob" min="0" value="0">
+                </div>
+                <div class="stat-row">
+                    <label for="failedToGetRunner">Failed to get the runner in, when he was on third with less than 2 outs: <span class="sub-point red">(2)</span></label>
+                    <input type="number" id="failedToGetRunner" min="0" value="0">
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button type="submit" id="calculateButton">Calculate Points</button>
+                <button type="button" id="resetButton" style="display: none;">Reset</button>
+                <button type="button" id="submitButton" style="display: none; background-color: green;">Submit</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="./apps/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
