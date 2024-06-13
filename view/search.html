@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - Home Page</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <div class="container">
+        <button id="navigateToLeaderboard">Today's Leaderboard</button>
+        <h1>MLB Player Performance Tracker</h1>
+        <form id="playerPerformanceForm">
+
+            <label for="division">Select Division:</label>
+            <select id="division">
+                <option value="All">All Divisions</option>
+                <option value="AL West">AL West</option>
+                <option value="AL East">AL East</option>
+                <option value="AL Central">AL Central</option>
+                <option value="NL West">NL West</option>
+                <option value="NL East">NL East</option>
+                <option value="NL Central">NL Central</option>
+            </select><br><br>
+
+            <label for="team">Select Team:</label>
+            <select id="team">
+                <option value="">Select Team</option>
+                <!-- Options for selecting MLB teams will be dynamically populated here -->
+            </select><br><br>
+            
+            <label for="player">Select Player:</label>
+            <select id="player">
+                <option value="">Select Player</option>
+                <!-- Options for selecting players will be dynamically populated here -->
+            </select><span class="sub-point green">Must Select Team First</span>
+            <br><br>
+            
+            <label for="gameDate">Select Date:</label>
+            <input type="date" id="gameDate" required><br><br>
+
+            <button type="button" id="viewPerformanceButton">View Performance</button>
+        </form>
+
+        <div id="performanceDetails">
+            <!-- Performance details will be displayed here -->
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../apps/mlb.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+                window.location.href = '../view/index.html';
+            });
+        });
+    </script>
+</body>
+</html>
