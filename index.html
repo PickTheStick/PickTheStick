@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PTS! - Leaderboard</title>
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
     <button id="navigateToSearch">View A Previous Performance!</button>
@@ -53,20 +53,20 @@
         </ol>
     </div>
 
-    <script src="../apps/script.js"></script>
+    <script src="./apps/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
             const navigateToSearchButton = document.getElementById('navigateToSearch');
             navigateToFormTwoButton.addEventListener('click', function() {
-                window.location.href = '../view/addForm.html';
+                window.location.href = './view/addForm.html';
             });
             navigateToSearchButton.addEventListener('click', function() {
-                window.location.href = '../view/search.html';
+                window.location.href = './view/search.html';
             });
 
             document.getElementById('navigateToFormThree').addEventListener('click', function() {
-                window.location.href = '../view/calcForm.html';
+                window.location.href = './view/calcForm.html';
             });
 
             // Render the leaderboard and attach event listeners to buttons
