@@ -1,25 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const viewPerformanceButton = document.getElementById('viewPerformanceButton');
-    if (viewPerformanceButton) {
-        viewPerformanceButton.addEventListener('click', function() {
-            const teamSelect = document.getElementById('team');
-            const playerSelect = document.getElementById('player');
-            const gameDateInput = document.getElementById('gameDate');
-
-            const team = teamSelect.value;
-            const player = playerSelect.value;
-            const gameDate = gameDateInput.value;
-
-            if (team && player && gameDate) {
-                fetchPlayerPerformance(player, gameDate);
-            } else {
-                alert('Please select a team, player, and game date.');
-            }
-        });
-    }
-
-    const teamSelect = document.getElementById('team');
     const divisionSelect = document.getElementById('division');
+    const teamSelect = document.getElementById('team');
+    const playerSelect = document.getElementById('player');
+    const gameDateInput = document.getElementById('gameDate');
 
     const teams = {
         "AL West": ["Seattle Mariners", "Texas Rangers", "Houston Astros", "Oakland Athletics", "Los Angeles Angels"],
@@ -133,35 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return teamIds[teamName];
     }
-
-    function fetchPlayerPerformance(playerName, gameDate) {
-        axios.get(`/player-performance?playerName=${encodeURIComponent(playerName)}&gameDate=${gameDate}`)
-            .then(response => {
-                const performanceDetails = document.getElementById('performanceDetails');
-                const gameData = response.data.gameData;
-    
-                if (gameData.length > 0) {
-                    // Display performance details
-                    performanceDetails.innerHTML = `
-                        <h2>Performance Details</h2>
-                        <p><strong>Date:</strong> ${gameData[0]}</p>
-                        <p><strong>Team:</strong> ${gameData[1]}</p>
-                        <p><strong>Opponent:</strong> ${gameData[2]}</p>
-                        <!-- Add more fields as per your requirement -->
-                    `;
-                } else {
-                    performanceDetails.innerHTML = '<p>No performance data available for the selected date.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching player performance:', error);
-                const performanceDetails = document.getElementById('performanceDetails');
-                performanceDetails.innerHTML = '<p>Failed to fetch performance data.</p>';
-            });
-    }
-    
-    
-
     divisionSelect.addEventListener('change', populateTeamDropdown);
     teamSelect.addEventListener('change', function() {
         const selectedTeam = teamSelect.value;

@@ -29,10 +29,6 @@ label {
     font-weight: bold;
 }
 
-.input-group {
-    margin-bottom: 15px;
-}
-
 input[type="text"],
 input[type="date"],
 input[type="number"] {
@@ -62,6 +58,32 @@ button {
 
 button:hover {
     background-color: #420303;
+}
+
+.patterned-button {
+    padding: 15px 30px; /* Larger size */
+    background-color: #8c1414; /* Dark red resembling a baseball bat */
+    background-image: radial-gradient(circle at 10px 10px, transparent 10px, #892d2d 11px); /* First wood grain */
+    background-size: 40px 40px; /* Size of the pattern */
+
+    /* Text styles */
+    color: #fff; /* White text */
+    font-weight: bold; /* Bold font */
+    text-transform: uppercase; /* Uppercase text */
+    letter-spacing: 1px; /* Letter spacing for a cool effect */
+
+    /* Text shadow for emphasis */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Horizontal offset, vertical offset, blur radius, color */
+    font-size: 18px; /* Increase font size */
+}
+
+
+
+
+.small-button {
+    padding: 8px 16px; /* Smaller size */
+    background-color: #ccc; /* Gray color */
+    color: #666; /* Darker gray text */
 }
 
 .editButton {

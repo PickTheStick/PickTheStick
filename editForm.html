@@ -108,7 +108,7 @@
     <script src="./apps/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('navigateToLeaderboard').addEventListener('click', () => window.location.href = 'index.html');
+            document.getElementById('navigateToLeaderboard').addEventListener('click', () => window.location.href = 'leaderboard.html');
             const urlParams = new URLSearchParams(window.location.search);
             document.getElementById('userName').value = decodeURIComponent(urlParams.get('userName'));
             document.getElementById('playerName').value = decodeURIComponent(urlParams.get('playerName'));

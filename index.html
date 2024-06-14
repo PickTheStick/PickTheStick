@@ -3,76 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PTS! - Leaderboard</title>
+    <title>PTS! - Home Page</title>
     <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
-    <button id="navigateToSearch">View A Previous Performance!</button>
     <div class="container">
-        <button id="navigateToFormTwo">Add to LeaderBoard</button>
-        <br><br>
-        <button id="navigateToFormThree">Fantasy PickTheStick Calculator</button>
-        <h1>Pick The Stick!</h1>
-        <div id="leaderboard">
-            <h2>Live Leaderboard</h2>
-            <p>*Fail = Failed to get the runner in, when he was on third with less than 2 outs:*</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>User</th>
-                        <th>Player Name</th>
-                        <th>Points</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardBody">
-                    <!-- Leaderboard rows will be populated here -->
-                </tbody>
-            </table>
+        <button id="navigateToLeaderboard">Today's Leaderboard</button>
+        <h1>MLB Player Performance Tracker</h1>
+        <form id="playerPerformanceForm">
+            
+            <label for="user">User:</label>
+            <input type="text" id="user" required><br><br>
+
+            <label for="division">Select Division:</label>
+            <select id="division">
+                <option value="All">All Divisions</option>
+                <option value="AL West">AL West</option>
+                <option value="AL East">AL East</option>
+                <option value="AL Central">AL Central</option>
+                <option value="NL West">NL West</option>
+                <option value="NL East">NL East</option>
+                <option value="NL Central">NL Central</option>
+            </select><br><br>
+
+            <label for="team">Select Team:</label>
+            <select id="team">
+                <option value="">Select Team</option>
+                <!-- Options for selecting MLB teams will be dynamically populated here -->
+            </select><br><br>
+            
+            <label for="player">Select Player:</label>
+            <select id="player">
+                <option value="">Select Player</option>
+                <!-- Options for selecting players will be dynamically populated here -->
+            </select><span class="sub-point green">Must Select Team First</span>
+            <br><br>
+            
+            <label for="gameDate">Today's Date:</label>
+            <!-- Display today's date as text, not editable -->
+            <input type="text" id="gameDate" disabled><br><br>
+
+            <button type="button" id="pickTheStickButton" class="patterned-button">Pick the Stick</button>
+        </form>
+
+        <div id="performanceDetails">
+            <!-- Performance details will be displayed here -->
         </div>
     </div>
     
-    <div class="sticky-note">
-        <p>DEV NOTES</p>
-        <ol>
-            <li>Make edit page re-populate all the number values. Then make the number values that do appear password locked.</li>
-            <li>Make leaderboard global --> this means PAYING for an online database to store information on the cloud so everyone can see what other people submitted.</li>
-            <li>View performance from any player on any date --> this entails finding an API that is has CORS permissions that can cross reference my data with data that they have. Also needs back-end node.js and npm installs. (this is hard)</li>
-            <li>Once step 2 & 3 are done: rebuild interface from the ground up to make the skeleton of what the app will end up looking like.</li>
-            <ol>
-                <li>Home page will have users sign-in to a 'pick the stick group'. There will be 5 groups. (groups of 9)</li>
-                <li>After a group is selected for that day, there will be a new page with the option to 'pick the stick'.</li>
-                <li>Once picked it will make the leaderboard page appear.</li>
-                <li>New leaderboard will have live leaderboard with the users 'pick the stick' among the other 8 members.</li>
-                <li>'Add to Leaderboard' and 'delete' button will be password locked.</li>
-                <li>'Edit' button will only allow the user to change their username.</li>
-                <li>After 12:00PM leaderboards will clear.</li>
-            </ol>
-        </ol>
+    <div class="admin-buttons">
+        <button id="turnOffPicks" class="small-button">Turn Off Picks</button>
+        <button id="turnOnPicks" class="small-button">Turn On Picks</button>
     </div>
-
-    <script src="./apps/script.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./apps/mlb.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const navigateToFormTwoButton = document.getElementById('navigateToFormTwo');
-            const navigateToSearchButton = document.getElementById('navigateToSearch');
-            navigateToFormTwoButton.addEventListener('click', function() {
-                window.location.href = 'addForm.html';
-            });
-            navigateToSearchButton.addEventListener('click', function() {
-                window.location.href = 'search.html';
+            const today = new Date(); // Get today's date
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const formattedDate = `${year}-${month}-${day}`;
+            document.getElementById('gameDate').value = formattedDate;
+
+            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
+                window.location.href = 'leaderboard.html';
             });
 
-            document.getElementById('navigateToFormThree').addEventListener('click', function() {
-                window.location.href = 'calcForm.html';
+            const pickTheStickButton = document.getElementById('pickTheStickButton');
+            const turnOffPicksButton = document.getElementById('turnOffPicks');
+            const turnOnPicksButton = document.getElementById('turnOnPicks');
+            const adminPassword = 'boobs'; // Replace with actual secure logic
+
+            pickTheStickButton.addEventListener('click', function() {
+                const user = document.getElementById('user').value;
+                const playerElement = document.getElementById('player');
+                const player = playerElement.value;
+                const playerName = playerElement.options[playerElement.selectedIndex].text;
+
+                if (user && player) {
+                    const picksEnabled = localStorage.getItem('picksEnabled');
+                    if (picksEnabled === 'false') {
+                        alert('It is past time to pick the stick. Picks are currently disabled.');
+                        return;
+                    }
+
+                    const lastPickDate = localStorage.getItem(`${user}_lastPickDate`);
+                    const currentDate = formattedDate;
+
+                    if (lastPickDate === currentDate) {
+                        alert('You have already made a pick today.');
+                        return;
+                    }
+
+                    localStorage.setItem(`${user}_lastPickDate`, currentDate);
+                    localStorage.setItem('selectedPlayer', JSON.stringify({ user, playerName, gameDate: formattedDate }));
+                    window.location.href = 'leaderboard.html';
+                } else {
+                    alert('Please fill in all fields.');
+                }
             });
 
-            // Render the leaderboard and attach event listeners to buttons
-            renderLeaderboard(JSON.parse(localStorage.getItem('leaderboard')) || []);
+            turnOffPicksButton.addEventListener('click', function() {
+                const password = prompt('Enter admin password:');
+                if (password === adminPassword) {
+                    localStorage.setItem('picksEnabled', 'false');
+                    alert('Picks turned off.');
+                } else {
+                    alert('Incorrect password.');
+                }
+            });
+
+            turnOnPicksButton.addEventListener('click', function() {
+                const password = prompt('Enter admin password:');
+                if (password === adminPassword) {
+                    localStorage.setItem('picksEnabled', 'true');
+                    alert('Picks turned on.');
+                } else {
+                    alert('Incorrect password.');
+                }
+            });
         });
     </script>
 </body>
 </html>
-
