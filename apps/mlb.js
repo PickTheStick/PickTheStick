@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const apiUrl = `http://lookup-service-prod.mlb.com/json/named.roster_40.bam?team_id=${teamId}`;
+        const apiUrl = `https://lookup-service-prod.mlb.com/json/named.roster_40.bam?team_id=${teamId}`;
 
         fetch(apiUrl)
             .then(response => {
