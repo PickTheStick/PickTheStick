@@ -68,16 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('homeRun').addEventListener('input', function() {
             const homeRunValue = parseInt(this.value) || 0;
             const rbisInput = document.getElementById('rbis');
+            const rbisValue = parseInt(rbisInput.value) || 0;
             const runsInput = document.getElementById('runs');
-            
-            if (homeRunValue > 0) {
-                if (parseInt(rbisInput.value) === 0) {
-                    rbisInput.value = homeRunValue;
-                }
-                if (parseInt(runsInput.value) === 0) {
-                    runsInput.value = homeRunValue;
-                }
-            }
+            const runsValue = parseInt(runsInput.value) || 0;
+        
+            const prevHomeRunValue = parseInt(this.getAttribute('data-prev-value')) || 0;
+            const homeRunDiff = homeRunValue - prevHomeRunValue;
+        
+            rbisInput.value = rbisValue + homeRunDiff;
+            runsInput.value = runsValue + homeRunDiff;   
+            this.setAttribute('data-prev-value', homeRunValue);
         });
 
         ['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
@@ -85,17 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (inputElement) {
                 inputElement.addEventListener('input', function() {
                     const oldValue = parseInt(this.getAttribute('data-old-value')) || 0;
-                    const increaseValue = parseInt(this.value) || 0;
+                    const newValue = parseInt(this.value) || 0;
                     const outsInput = document.getElementById('outs');
-                    if (increaseValue > oldValue) {
-                        outsInput.value = parseInt(outsInput.value) + 1;
-                    } else if (increaseValue < oldValue) {
-                        outsInput.value = Math.max(parseInt(outsInput.value) - 1, 0);
-                    }
-                    this.setAttribute('data-old-value', increaseValue);
+                    const outsValue = parseInt(outsInput.value) || 0;
+                    const difference = newValue - oldValue;
+                    outsInput.value = Math.max(outsValue + difference, 0);
+                    this.setAttribute('data-old-value', newValue);
                 });
             }
-        });
+        });  
     }
 
     if (resetButton) {

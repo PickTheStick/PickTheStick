@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
+    <button id="navigateToLeaderboard">Today's Leaderboard</button>
     <div class="container">
-        <button id="navigateToLeaderboard">Today's Leaderboard</button>
         <h1>Pick The Stick!</h1>
         <form id="playerPerformanceForm">
             
             <label for="user">User:</label>
-            <input type="text" id="user" required><br><br>
+             <!-- Display user text, not editable -->
+            <input type="text" id="user" disabled><br><br>
 
             <label for="division">Select Division:</label>
             <select id="division">
@@ -55,77 +56,12 @@
         <button id="turnOffPicks" class="small-button">Turn Off Picks</button>
         <button id="turnOnPicks" class="small-button">Turn On Picks</button>
     </div>
-    
+    <div class="user-list">
+        <h2>Users in Group</h2>
+        <ul id="userList"></ul>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./apps/mlb.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date(); // Get today's date
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const formattedDate = `${year}-${month}-${day}`;
-            document.getElementById('gameDate').value = formattedDate;
-
-            document.getElementById('navigateToLeaderboard').addEventListener('click', function() {
-                window.location.href = 'leaderboard.html';
-            });
-
-            const pickTheStickButton = document.getElementById('pickTheStickButton');
-            const turnOffPicksButton = document.getElementById('turnOffPicks');
-            const turnOnPicksButton = document.getElementById('turnOnPicks');
-            const adminPassword = 'boobs'; // Replace with actual secure logic
-
-            pickTheStickButton.addEventListener('click', function() {
-                const user = document.getElementById('user').value;
-                const playerElement = document.getElementById('player');
-                const player = playerElement.value;
-                const playerName = playerElement.options[playerElement.selectedIndex].text;
-
-                if (user && player) {
-                    const picksEnabled = localStorage.getItem('picksEnabled');
-                    if (picksEnabled === 'false') {
-                        alert('It is past time to pick the stick. Picks are currently disabled.');
-                        return;
-                    }
-
-                    const lastPickDate = localStorage.getItem(`${user}_lastPickDate`);
-                    const currentDate = formattedDate;
-
-                    if (lastPickDate === currentDate) {
-                        alert('You have already made a pick today.');
-                        return;
-                    }
-
-                    localStorage.setItem(`${user}_lastPickDate`, currentDate);
-                    localStorage.setItem('selectedPlayer', JSON.stringify({ user, playerName, gameDate: formattedDate }));
-                    window.location.href = 'leaderboard.html';
-                } else {
-                    alert('Please fill in all fields.');
-                }
-            });
-
-            turnOffPicksButton.addEventListener('click', function() {
-                const password = prompt('Enter admin password:');
-                if (password === adminPassword) {
-                    localStorage.setItem('picksEnabled', 'false');
-                    alert('Picks turned off.');
-                } else {
-                    alert('Incorrect password.');
-                }
-            });
-
-            turnOnPicksButton.addEventListener('click', function() {
-                const password = prompt('Enter admin password:');
-                if (password === adminPassword) {
-                    localStorage.setItem('picksEnabled', 'true');
-                    alert('Picks turned on.');
-                } else {
-                    alert('Incorrect password.');
-                }
-            });
-        });
-    </script>
+    <script src="./apps/userList.js"></script>
 </body>
 </html>

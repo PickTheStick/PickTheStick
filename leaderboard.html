@@ -16,6 +16,7 @@
         <div id="leaderboard">
             <h2>Live Leaderboard</h2>
             <p>*Fail = Failed to get the runner in, when he was on third with less than 2 outs:*</p>
+            <p id="slotsInfo">Loading available slots...</p> <!-- Display available slots here -->
             <table>
                 <thead>
                     <tr>
@@ -38,18 +39,14 @@
     <div class="sticky-note">
         <p>DEV NOTES</p>
         <ol>
-            <li>Make edit page re-populate all the number values. Then make the number values that do appear password locked.</li>
             <li>Make leaderboard global --> this means PAYING for an online database to store information on the cloud so everyone can see what other people submitted.</li>
             <li>View performance from any player on any date --> this entails finding an API that is has CORS permissions that can cross reference my data with data that they have. Also needs back-end node.js and npm installs. (this is hard)</li>
-            <li>Once step 2 & 3 are done: rebuild interface from the ground up to make the skeleton of what the app will end up looking like.</li>
+            <li>Once step 1 & 2 are done: rebuild interface from the ground up to make the skeleton of what the app will end up looking like.</li>
             <ol>
-                <li>Home page will have users sign-in to a 'pick the stick group'. There will be 5 groups. (groups of 9)</li>
-                <li>After a group is selected for that day, there will be a new page with the option to 'pick the stick'.</li>
-                <li>Once picked it will make the leaderboard page appear.</li>
-                <li>New leaderboard will have live leaderboard with the users 'pick the stick' among the other 8 members.</li>
-                <li>'Add to Leaderboard' and 'delete' button will be password locked.</li>
-                <li>'Edit' button will only allow the user to change their username.</li>
-                <li>After 12:00PM leaderboards will clear.</li>
+                <li>Fix sign up page</li>
+                <li>Fix index page</li>
+                <li>'Edit' button will only allow the user to change their username. Everything else will be locked for admin.</li>
+                <li>Make leaderboards time based on when to appear and clear.</li>
             </ol>
         </ol>
     </div>
@@ -98,6 +95,24 @@
 
             // Render the leaderboard
             renderLeaderboard(JSON.parse(localStorage.getItem('leaderboard')) || []);
+            displayAvailableSlots(); // Display available slots information
+
+            function displayAvailableSlots() {
+                const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+                const currentEntries = leaderboard.length;
+                const maxSlots = 9;
+                const availableSlots = maxSlots - currentEntries;
+                const slotsInfo = document.getElementById('slotsInfo');
+                slotsInfo.textContent = `Available slots: ${availableSlots} out of ${maxSlots}`;
+
+                // Disable sign-up button if all slots are filled
+                const signUpButton = document.getElementById('signUpButton');
+                if (availableSlots === 0) {
+                    signUpButton.disabled = true;
+                } else {
+                    signUpButton.disabled = false;
+                }
+            }
         });
     </script>
 </body>

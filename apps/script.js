@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('navigateToLeaderboard').addEventListener('click', () => {
-        window.location.href = 'leaderboard.html';
-    });
+     // Ensure element exists before attaching event listener
+     const navigateToLeaderboardButton = document.getElementById('navigateToLeaderboard');
+     if (navigateToLeaderboardButton) {
+         navigateToLeaderboardButton.addEventListener('click', () => {
+             window.location.href = 'leaderboard.html';
+         });
+     }
 
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('userName').value = decodeURIComponent(urlParams.get('userName'));
@@ -76,31 +80,29 @@ if (statForm) {
         const rbisValue = parseInt(rbisInput.value) || 0;
         const runsInput = document.getElementById('runs');
         const runsValue = parseInt(runsInput.value) || 0;
-
-        if (homeRunValue > 0 && rbisValue === 0) {
-            rbisInput.value = homeRunValue;
-        }
-        if (homeRunValue > 0 && runsValue === 0) {
-            runsInput.value = homeRunValue;
-        }
+    
+        const prevHomeRunValue = parseInt(this.getAttribute('data-prev-value')) || 0;
+        const homeRunDiff = homeRunValue - prevHomeRunValue;
+    
+        rbisInput.value = rbisValue + homeRunDiff;
+        runsInput.value = runsValue + homeRunDiff;   
+        this.setAttribute('data-prev-value', homeRunValue);
     });
-
+    
     ['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
         const inputElement = document.getElementById(statId);
         if (inputElement) {
             inputElement.addEventListener('input', function() {
                 const oldValue = parseInt(this.getAttribute('data-old-value')) || 0;
-                const increaseValue = parseInt(this.value) || 0;
+                const newValue = parseInt(this.value) || 0;
                 const outsInput = document.getElementById('outs');
-                if (increaseValue > oldValue) {
-                    outsInput.value = parseInt(outsInput.value) + 1;
-                } else if (increaseValue < oldValue) {
-                    outsInput.value = Math.max(parseInt(outsInput.value) - 1, 0);
-                }
-                this.setAttribute('data-old-value', increaseValue);
+                const outsValue = parseInt(outsInput.value) || 0;
+                const difference = newValue - oldValue;
+                outsInput.value = Math.max(outsValue + difference, 0);
+                this.setAttribute('data-old-value', newValue);
             });
         }
-    });
+    });    
 }
 
 if (resetButton) {
@@ -306,13 +308,29 @@ function renderLeaderboard(leaderboard) {
         });
 
         row.querySelector('.moreInfoButton').addEventListener('click', function(event) {
-            event.stopPropagation();
-
+            event.stopPropagation();       
             const detailedPoints = entry.pointsData || {};
-            const pointsInfo = JSON.stringify(detailedPoints);
-            alert(`Stats for ${entry.name}: ${pointsInfo}`);
+            const pointsInfo = Object.entries(detailedPoints)
+                .filter(([stat, value]) => value !== 0)
+                .map(([stat, value]) => `<li>${stat}: ${value}</li>`)
+                .join('');
+        
+            const infoBox = document.createElement('div');
+            infoBox.className = 'info-box';
+            infoBox.innerHTML = `
+                <button class="close-button">x</button>
+                <ul>${pointsInfo}</ul>
+            `;       
+            const rect = event.target.getBoundingClientRect();
+            infoBox.style.top = `${rect.bottom + window.scrollY}px`;
+            infoBox.style.left = `${rect.left + window.scrollX}px`;
+        
+            infoBox.querySelector('.close-button').addEventListener('click', function() {
+                document.body.removeChild(infoBox);
+            });       
+            document.body.appendChild(infoBox);
         });
-
+    
         const editButton = row.querySelector('.editButton');
         const deleteButton = row.querySelector('.deleteButton');
         const password = "boobs"; // Replace with your desired password
@@ -361,7 +379,6 @@ function renderLeaderboard(leaderboard) {
                 alert("Deletion canceled!");
             }
         });
-
         tbody.appendChild(row);
         tbody.appendChild(detailsRow);
     });
