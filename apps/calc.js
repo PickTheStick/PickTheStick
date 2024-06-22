@@ -53,10 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const caughtStealing = parseInt(document.getElementById('caughtStealing').value) || 0;
             const doublePlay = parseInt(document.getElementById('doublePlay').value) || 0;
             const rispLob = parseInt(document.getElementById('rispLob').value) || 0;
-            const failedToGetRunner = parseInt(document.getElementById('failedToGetRunner').value) || 0;
 
-            const totalPoints = calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner);
-            const resultDescription = generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner);
+            const totalPoints = calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob);
+            const resultDescription = generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob);
 
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `<p>Earned ${totalPoints.toFixed(2)} points. ${resultDescription}</p>`;
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.setAttribute('data-prev-value', homeRunValue);
         });
 
-        ['strikeouts', 'doublePlay', 'failedToGetRunner'].forEach(function(statId) {
+        ['strikeouts', 'doublePlay'].forEach(function(statId) {
             const inputElement = document.getElementById(statId);
             if (inputElement) {
                 inputElement.addEventListener('input', function() {
@@ -107,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner) {
+function calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob) {
     let positivePoints = 0;
     let negativePoints = 0;
 
@@ -125,13 +124,12 @@ function calculatePoints(walks, single, double, triple, homeRun, SB, sacrifice, 
     negativePoints += caughtStealing * 1;
     negativePoints += doublePlay * 1;
     negativePoints += rispLob * 0.5;
-    negativePoints += failedToGetRunner * 2;
 
     const totalPoints = positivePoints - negativePoints;
     return totalPoints;
 }
 
-function generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob, failedToGetRunner) {
+function generateResultDescription(walks, single, double, triple, homeRun, SB, sacrifice, rbis, runs, outs, roe, strikeouts, caughtStealing, doublePlay, rispLob) {
     const hits = single + double + triple + homeRun;
     const atBats = hits + outs + roe;
     const results = [];
@@ -151,8 +149,6 @@ function generateResultDescription(walks, single, double, triple, homeRun, SB, s
     if (caughtStealing > 0) negativeResults.push(`${caughtStealing} caught stealing`);
     if (doublePlay > 0) negativeResults.push(`${doublePlay} GIDP`);
     if (rispLob > 0) negativeResults.push(`${rispLob} LOB`);
-    if (failedToGetRunner > 0) negativeResults.push(`${failedToGetRunner} Fail`);
-
-    const negativePoints = (strikeouts * 1) + (caughtStealing * 1) + (doublePlay * 1) + (rispLob * 0.5) + (failedToGetRunner * 2);
+    const negativePoints = (strikeouts * 1) + (caughtStealing * 1) + (doublePlay * 1) + (rispLob * 0.5);
     return `${hits}/${atBats} (${results.join(', ')}) [ -${negativePoints.toFixed(2)} (${negativeResults.join(', ')})]`;
 }

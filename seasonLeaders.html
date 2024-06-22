@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTS! - Season Leaderboard</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <button id="navigateToSearch">Back to Main Menu</button>
+    <div class="container">
+        <button id="navigateToFormThree">Fantasy PickTheStick Calculator</button>
+        <br><br>
+        <h1>Pick The Stick!</h1>
+        <div id="leaderboard">
+            <h2>Season Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Points</th>
+                        <th>Players Used</th>
+                    </tr>
+                </thead>
+                <tbody id="seasonLeaderboardBody">
+                    <!-- Season leaderboard rows will be populated here -->
+                </tbody>
+            </table>
+            <button id="refreshSeasonLeaderboard" class="icon-button">🔄</button> <!-- Refresh button -->
+            <button id="clearSeasonLeaderboard" class="icon-button">🗑️</button> <!-- Clear button -->
+        </div>
+    </div>
+
+    <div class="sticky-note">
+        <p>DEV NOTES</p>
+        <!-- Dev notes content remains unchanged -->
+    </div>
+
+    <script src="./apps/seasonLeaders.js"></script>
+    <script src="./apps/navigation.js"></script> <!-- Added script for navigation -->
+</body>
+</html>
