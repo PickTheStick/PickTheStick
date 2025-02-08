@@ -8,14 +8,13 @@
 </head>
 <body>
     <button id="navigateToLeaderboard">Today's Leaderboard</button>
-    <button id="navigateToSeasonLeaderboard">Season's Leaderboard</button> <!-- New button -->
+    <button id="navigateToSeasonLeaderboard">Season's Leaderboard</button>
 
     <div class="container">
         <h1>Pick The Stick!</h1>
         <form id="playerPerformanceForm">
             
             <label for="user">User:</label>
-             <!-- Display user text, not editable -->
             <input type="text" id="user" disabled><br><br>
 
             <label for="division">Select Division:</label>
@@ -32,32 +31,30 @@
             <label for="team">Select Team:</label>
             <select id="team">
                 <option value="">Select Team</option>
-                <!-- Options for selecting MLB teams will be dynamically populated here -->
             </select><br><br>
-            
-            <label for="player">Select Player:</label>
-            <select id="player">
-                <option value="">Select Player</option>
-                <!-- Options for selecting players will be dynamically populated here -->
-            </select><span class="sub-point green">Must Select Team First</span>
-            <br><br>
-            
+
+            <div id="projected-regular-starters" class="roster">
+                <div class="section-title">Projected Regular Starters</div>
+            </div>
+
+            <div id="projected-bench-and-40man" class="roster">
+                <div class="section-title">Projected Bench and 40-man Roster</div>
+            </div>
+
             <label for="gameDate">Today's Date:</label>
-            <!-- Display today's date as text, not editable -->
             <input type="text" id="gameDate" disabled><br><br>
 
             <button type="button" id="pickTheStickButton" class="patterned-button">Pick the Stick</button>
         </form>
 
-        <div id="performanceDetails">
-            <!-- Performance details will be displayed here -->
-        </div>
+        <div id="performanceDetails"></div>
     </div>
-    
+
     <div class="admin-buttons">
         <button id="turnOffPicks" class="small-button">Turn Off Picks</button>
         <button id="turnOnPicks" class="small-button">Turn On Picks</button>
     </div>
+
     <div class="user-list">
         <h2>Users in Group</h2>
         <ul id="userList"></ul>
@@ -65,6 +62,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./apps/mlb.js"></script>
     <script src="./apps/userList.js"></script>
-    <script src="./apps/navigation.js"></script> <!-- Added script for navigation -->
+    <script src="./apps/navigation.js"></script>
 </body>
 </html>

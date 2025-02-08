@@ -26,30 +26,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     pickTheStickButton.addEventListener('click', function() {
         const user = document.getElementById('user').value;
-        const playerElement = document.getElementById('player');
-        const player = playerElement.value;
-        const playerName = playerElement.options[playerElement.selectedIndex].text;
-
-        if (user && player) {
+        const selectedPlayerImg = document.querySelector('#projected-regular-starters img.selected');
+    
+        if (user && selectedPlayerImg) {
+            const playerName = selectedPlayerImg.alt;  // Use the player's name from the image alt attribute
+            const playerId = selectedPlayerImg.dataset.id;  // Store the player ID as well
+    
             const picksEnabled = localStorage.getItem('picksEnabled');
             if (picksEnabled === 'false') {
                 alert('It is past time to pick the stick. Picks are currently disabled.');
                 return;
             }
-
+    
             const lastPickDate = localStorage.getItem(`${user}_lastPickDate`);
-            const currentDate = formattedDate;
-
+            const currentDate = new Date().toLocaleDateString();
+    
             if (lastPickDate === currentDate) {
                 alert('You have already made a pick today.');
                 return;
             }
-
+    
             localStorage.setItem(`${user}_lastPickDate`, currentDate);
-            localStorage.setItem('selectedPlayer', JSON.stringify({ user, playerName, gameDate: formattedDate }));
+            localStorage.setItem('selectedPlayer', JSON.stringify({ user, playerName, playerId, gameDate: currentDate }));
             window.location.href = 'leaderboard.html';
         } else {
-            alert('Please fill in all fields.');
+            alert('Please select a player and fill in all fields.');
         }
     });
 
