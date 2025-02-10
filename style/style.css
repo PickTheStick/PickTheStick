@@ -293,5 +293,14 @@ select, input {
 .selected {
     border: 2px solid green;
     background-color: rgba(0, 255, 0, 0.2);
+}.section-title-wrapper {
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin-bottom: 20px; /* Adds spacing between title and players */
 }
 
+/* .section-title {
+    font-size: 1.5em;
+    font-weight: bold;
+} */

@@ -154,8 +154,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear the sections before appending new data
         const regularStartersDiv = document.getElementById("projected-regular-starters");
         const benchAnd40ManDiv = document.getElementById("projected-bench-and-40man");
-        regularStartersDiv.innerHTML = "<div class='section-title'>Projected Regular Starters</div>";
-        benchAnd40ManDiv.innerHTML = "<div class='section-title'>Projected Bench and 40-man Roster</div>";
+        
+        // Ensure section titles are in their own full-width containers
+        regularStartersDiv.innerHTML = "<div class='section-title-wrapper'><div class='section-title'>2025 Projected Regular Starters</div></div>";
+        benchAnd40ManDiv.innerHTML = "<div class='section-title-wrapper'><div class='section-title'>2025 Projected Bench/40-man</div></div>";
     
         // Add players to the respective sections
         roster.forEach(player => {
@@ -169,13 +171,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create player element
             const playerDiv = document.createElement('div');
             playerDiv.classList.add('player');
+    
+            // Create name element
+            const playerNameElement = document.createElement('div');
+            playerNameElement.classList.add('player-name');
+            playerNameElement.textContent = playerName;
+    
+            // Create image element
             const playerImg = document.createElement('img');
             playerImg.src = imgSrc;
             playerImg.alt = playerName;
             playerImg.dataset.id = playerId;  // Store player ID for selection
-            playerDiv.appendChild(playerImg);
     
-            // Categorize the player into regular starters or bench/40-man roster
+            // Append image and name
+            playerDiv.appendChild(playerImg);
+            playerDiv.appendChild(playerNameElement);
+    
+            // Append player below the section title
             if (projectedStarters.has(playerName)) {
                 regularStartersDiv.appendChild(playerDiv);
             } else {
@@ -192,16 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
-
-    // function createPlayerElement(playerName, imgSrc) {
-    //     const playerElement = document.createElement("div");
-    //     playerElement.classList.add("player");
-    //     playerElement.innerHTML = `
-    //         <img src="${imgSrc}" alt="${playerName}" />
-    //         <div>${playerName}</div>
-    //     `;
-    //     return playerElement;
-    // }
 
     // Display today's date
     const today = new Date().toLocaleDateString();
