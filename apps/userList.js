@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pickTheStickButton = document.getElementById('pickTheStickButton');
     const turnOffPicksButton = document.getElementById('turnOffPicks');
     const turnOnPicksButton = document.getElementById('turnOnPicks');
-    const adminPassword = 'boobs'; // Replace with actual secure logic
+    const adminPassword = 'password2'; // Replace with actual secure logic
 
     pickTheStickButton.addEventListener('click', function() {
         const user = document.getElementById('user').value;
