@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('password').value;
 
         // For prototype, we only handle Group 1
-        if (group === '1' && password === 'pp') {
+        if (group === '1' && password === 'password1') {
             const users = JSON.parse(localStorage.getItem('users')) || [];
             users.push({ userName, group });
             localStorage.setItem('users', JSON.stringify(users));
